@@ -2,9 +2,7 @@ DECLARE FUNCTION GetPrice! (itemName AS STRING)
 DECLARE FUNCTION PriceWithTax! (price AS DOUBLE)
 DECLARE SUB Main ()
 CLS
-PRINT GetPrice("apple")
-PRINT GetPrice("cake")
-PRINT GetPrice("pop")
+CALL Main
 
 FUNCTION GetPrice (itemName AS STRING)
         itemName = LCASE$(itemName)
@@ -29,6 +27,15 @@ SUB Main
         LET running = 1
         WHILE running
                 CLS
+                PRINT "WHAT DO YOU WANT TO BUY?"
+                INPUT item$
+
+                LET priceNoTax = GetPrice(item$)
+                IF priceNoTax = -1 THEN
+                        PRINT "Sorry, we don't sell "; item$; "."
+                END IF
+
+
                 PRINT "Is that everything? Y/N"
                 INPUT isDone$
                 isDone$ = LCASE$(isDone$)
