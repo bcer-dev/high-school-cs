@@ -24,23 +24,38 @@ FUNCTION GetPrice (itemName AS STRING)
 END FUNCTION
 
 SUB Main
+        DIM priceNoTax AS DOUBLE
+        DIM qty AS INTEGER
+        DIM totalPrice AS DOUBLE
+        
+        totalPrice = 0!
         LET running = 1
         WHILE running
                 CLS
+                COLOR 7, 0
                 PRINT "WHAT DO YOU WANT TO BUY?"
                 INPUT item$
 
-                LET priceNoTax = GetPrice(item$)
+                qty = 1
+                priceNoTax = GetPrice(item$)
                 IF priceNoTax = -1 THEN
+                        COLOR 4, 0
                         PRINT "Sorry, we don't sell "; item$; "."
+                ELSE
+                        PRINT "How many "; item$; "s do you want to buy?"
+                        INPUT qty
+                        IF qty < 1 THEN qty = 1
+                        totalPrice = totalPrice + PriceWithTax(priceNoTax) * qty
                 END IF
 
-
+                COLOR 7, 0
                 PRINT "Is that everything? Y/N"
                 INPUT isDone$
                 isDone$ = LCASE$(isDone$)
 
                 IF isDone$ = "y" THEN
+                        CLS
+                        PRINT "Total Price: $"; totalPrice
                         running = 0
                 END IF
         WEND
