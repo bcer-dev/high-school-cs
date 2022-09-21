@@ -1,3 +1,4 @@
+DECLARE FUNCTION GetProductIndex! (itemName AS STRING)
 DECLARE SUB PrintItems ()
 DECLARE FUNCTION GetPrice! (itemName AS STRING)
 DECLARE FUNCTION PriceWithTax! (price AS DOUBLE)
@@ -5,6 +6,7 @@ DECLARE SUB Main ()
 
 DIM SHARED items(5) AS STRING
 DIM SHARED prices(5) AS DOUBLE
+DIM SHARED purchases(5) AS INTEGER
 
 REM "Items and their prices"
 items(1) = "apple"
@@ -34,6 +36,15 @@ FUNCTION GetPrice (itemName AS STRING)
         NEXT i
 END FUNCTION
 
+FUNCTION GetProductIndex (itemName AS STRING)
+        GetProductIndex = -1
+        FOR i = 1 TO LEN(items) + 1
+                IF items(i) = itemName THEN
+                        GetProductIndex = i
+                END IF
+        NEXT i
+END FUNCTION
+
 SUB Main
         DIM priceNoTax AS DOUBLE
         DIM qty AS INTEGER
@@ -53,7 +64,7 @@ SUB Main
                 IF item$ = "" THEN
                         COLOR 4, 0
                         PRINT "Please enter a valid product name."
-                ELSE IF priceNoTax = -1 THEN
+                ELSEIF priceNoTax = -1 THEN
                         COLOR 4, 0
                         PRINT "Sorry, we don't sell "; item$; "."
                 ELSE
@@ -61,6 +72,8 @@ SUB Main
                         INPUT qty
                         IF qty < 1 THEN qty = 1
                         totalPrice = totalPrice + PriceWithTax(priceNoTax) * qty
+                        LET pIndex = GetProductIndex(item$)
+                        purchases(pIndex) = qty
                 END IF
 
                 COLOR 7, 0
@@ -70,6 +83,14 @@ SUB Main
 
                 IF isDone$ = "y" THEN
                         CLS
+                        FOR i = 1 TO LEN(purchases) + 1
+                                IF purchases(i) <> 0 THEN
+                                        PRINT items(i); " x "; purchases(i); "    $"; GetPrice(items(i))
+                                END IF
+                        NEXT i
+
+                        PRINT
+                        COLOR 10, 0
                         PRINT "Total Price:"
                         PRINT USING "$#########,.##"; totalPrice
                         running = 0
@@ -85,7 +106,7 @@ SUB PrintItems
         COLOR 3, 0
         PRINT "Products:"
         FOR i = 1 TO LEN(items) + 1
-                PRINT items(i); "    $"; prices(i)
+                PRINT USING "&     $#####.##"; items(i); prices(i)
         NEXT i
         PRINT
         COLOR 7, 0
