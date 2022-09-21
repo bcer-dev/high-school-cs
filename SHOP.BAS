@@ -49,6 +49,7 @@ SUB Main
         DIM priceNoTax AS DOUBLE
         DIM qty AS INTEGER
         DIM totalPrice AS DOUBLE
+        DIM totalPriceNoTax AS DOUBLE
         
         totalPrice = 0!
         LET running = 1
@@ -85,10 +86,13 @@ SUB Main
                         CLS
                         FOR i = 1 TO LEN(purchases) + 1
                                 IF purchases(i) <> 0 THEN
-                                        PRINT items(i); " x "; purchases(i); "    $"; GetPrice(items(i))
+                                        LET pr = GetPrice(items(i)) * purchases(i)
+                                        totalPriceNoTax = totalPriceNoTax + pr
+                                        PRINT items(i); " x "; purchases(i); "    $"; pr
                                 END IF
                         NEXT i
 
+                        PRINT USING "TAX:   $#####.##"; totalPrice - totalPriceNoTax
                         PRINT
                         COLOR 10, 0
                         PRINT "Total Price:"
