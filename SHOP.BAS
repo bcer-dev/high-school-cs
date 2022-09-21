@@ -1,26 +1,37 @@
+DECLARE SUB PrintItems ()
 DECLARE FUNCTION GetPrice! (itemName AS STRING)
 DECLARE FUNCTION PriceWithTax! (price AS DOUBLE)
 DECLARE SUB Main ()
+
+DIM SHARED items(5) AS STRING
+DIM SHARED prices(5) AS DOUBLE
+
+REM "Items and their prices"
+items(1) = "apple"
+prices(1) = 3.49
+
+items(2) = "orange"
+prices(2) = 4.23
+
+items(3) = "lemon"
+prices(3) = 3.5
+
+items(4) = "chicken"
+prices(4) = 10.99
+
+items(5) = "cake"
+prices(5) = 20.87
+
+REM "Main program execution"
 CLS
 CALL Main
 
 FUNCTION GetPrice (itemName AS STRING)
         itemName = LCASE$(itemName)
-
-        IF itemName = "apple" THEN
-                GetPrice = 2.99
-        ELSEIF itemName = "lemon" THEN
-                GetPrice = 3.75
-        ELSEIF itemName = "orange" THEN
-                GetPrice = 2.86
-        ELSEIF itemName = "chicken" THEN
-                GetPrice = 10.65
-        ELSEIF itemName = "cake" THEN
-                GetPrice = 20.01
-        ELSE
-                REM "If the item doesn't exist then return -1 as an error value"
-                GetPrice = -1
-        END IF
+        GetPrice = -1
+        FOR i = 1 TO LEN(items) + 1
+                IF items(i) = itemName THEN GetPrice = prices(i)
+        NEXT i
 END FUNCTION
 
 SUB Main
@@ -32,13 +43,17 @@ SUB Main
         LET running = 1
         WHILE running
                 CLS
+                CALL PrintItems
                 COLOR 7, 0
                 PRINT "WHAT DO YOU WANT TO BUY?"
                 INPUT item$
 
                 qty = 1
                 priceNoTax = GetPrice(item$)
-                IF priceNoTax = -1 THEN
+                IF item$ = "" THEN
+                        COLOR 4, 0
+                        PRINT "Please enter a valid product name."
+                ELSE IF priceNoTax = -1 THEN
                         COLOR 4, 0
                         PRINT "Sorry, we don't sell "; item$; "."
                 ELSE
@@ -55,7 +70,8 @@ SUB Main
 
                 IF isDone$ = "y" THEN
                         CLS
-                        PRINT "Total Price: $"; totalPrice
+                        PRINT "Total Price:"
+                        PRINT USING "$#########,.##"; totalPrice
                         running = 0
                 END IF
         WEND
@@ -64,4 +80,14 @@ END SUB
 FUNCTION PriceWithTax (price AS DOUBLE)
         PriceWithTax = price * 1.15
 END FUNCTION
+
+SUB PrintItems
+        COLOR 3, 0
+        PRINT "Products:"
+        FOR i = 1 TO LEN(items) + 1
+                PRINT items(i); "    $"; prices(i)
+        NEXT i
+        PRINT
+        COLOR 7, 0
+END SUB
 
