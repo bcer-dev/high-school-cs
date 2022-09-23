@@ -47,18 +47,25 @@ SUB PrintTitle
 END SUB
 
 FUNCTION RunQuiz
-    LET correct = 0
-    FOR i = 1 TO QUESTIONCOUNT
-	CALL PrintTitle
-	PRINT questions(i)
-	INPUT res$
-	IF res$ = "" THEN
-	    i = i - 1
-	ELSEIF res$ = answers(i) THEN
-	    correct = correct + 1
-	END IF
-	CLS
-    NEXT i
-    RunQuiz = correct
+	LET correct = 0
+	FOR i = 1 TO QUESTIONCOUNT
+		 CALL PrintTitle
+		 PRINT questions(i)
+		 INPUT res$
+		 IF res$ = "" THEN
+			i = i - 1
+		 ELSEIF res$ = answers(i) THEN
+			COLOR 10, 0
+			PRINT "Correct!"
+			correct = correct + 1
+		 ELSE
+			COLOR 4, 0
+			PRINT "Incorrect!"
+		 END IF
+		 COLOR 7, 0
+		 SLEEP 1
+		 CLS
+	 NEXT i
+	 RunQuiz = correct
 END FUNCTION
 
