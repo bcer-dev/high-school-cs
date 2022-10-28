@@ -17,7 +17,7 @@ def print_board():
     print()
 
 
-def parse_coords(line: str):
+def parse_coords(line: str) -> tuple:
     if not ',' in line:
         raise ValueError("Invalid Coordinates")
 
@@ -26,6 +26,12 @@ def parse_coords(line: str):
     y = int(sp_str[1])
 
     return (x, y)
+
+
+def validate_coords(coords: tuple) -> bool:
+    valid_x: bool = coords[0] > 0 and coords[0] < 4
+    valid_y: bool = coords[1] > 0 and coords[1] < 4
+    return valid_x and valid_y
 
 
 def print_player(current_player: Player):
@@ -40,13 +46,16 @@ def main():
         print_board()
         print_player(current_player)
         line = input("Enter board coordinates as x,y: ")
+        coords = None
 
         try:
-            parse_coords(line)
+            coords = parse_coords(line)
         except ValueError as ve:
             print(f"Invalid Coordinates: {line}")
             time.sleep(1)
             continue
+
+        print(validate_coords(coords))
 
         if current_player == Player.X:
             current_player = Player.O
